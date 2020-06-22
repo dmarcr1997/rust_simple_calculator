@@ -1,40 +1,30 @@
 use std::io;
-enum CalcType{
-    M,
-    D,
-    A,
-    S
-}
 struct Calculations{
     number1: u32,
     number2: u32,
     answer: u32
 }
 impl Calculations{
-    fn setNums (&mut self, num1: u32, num2: u32){
-        self.number1 = num1;
-        self.number2 = num2;
+    fn multiply(&mut self){
+        self.answer = self.number1 * self.number2;
+        println!("{} x {} = {}", self.number1, self.number2, self.answer);
     }
-    fn multiply(&mut self, num1: u32, num2: u32) -> u32{
-        self.answer = num1 * num2;
-        println!("{} x {} = {}", num1, num2, self.answer)
-    }
-    fn divide(&mut self, num1: u32, num2: u32) -> u32{
-        if(num2 == 0){
-            return "Cannot Divide by Zero!"
+    fn divide(&mut self){
+        if self.number2 == 0{
+            println!("Cannot Divide by Zero!");
         }
         else{
-            self.answer = num1 / num2;
-            println!("{} / {} = {}", num1, num2, self.answer)
+            self.answer = self.number1 / self.number2;
+            println!("{} / {} = {}", self.number1, self.number2, self.answer);
         }
     }
-    fn addition(&mut self, num1: u32, num2: u32) -> u32{
-        self.answer = num1 + num2;
-        println!("{} + {} = {}", num1, num2, self.answer)
+    fn addition(&mut self){
+        self.answer = self.number1 + self.number2;
+        println!("{} + {} = {}", self.number1, self.number2, self.answer)
     }
-    fn subtract(num1: u32, num2: u32) -> u32{
-        self.answer = num1 - num2;
-        println!("{} - {} = {}", num1, num2, self.answer)
+    fn subtract(&mut self){
+        self.answer = self.number1 - self.number2;
+        println!("{} - {} = {}", self.number1, self.number2, self.answer)
     }
 }
 fn main() {
@@ -45,7 +35,9 @@ fn main() {
         io::stdin()
             .read_line(&mut op)
             .expect("Failed to read line");
-        getNums(&op);        
+        let op: char = op.trim().parse().expect("character");
+        let mut calc_struct = getNums();
+        make_choice(op, &mut calc_struct);        
         println!("Would You like to convert again(y/n): ");
         let mut choice = String::new();
         io::stdin()
@@ -58,8 +50,37 @@ fn main() {
     }
 }
 
-fn getNums(choice: &String) -> u32{
-    match choice{
-        CalcType::M =>  
+fn getNums() -> Calculations{
+    println!("Enter Your First Number:");
+    let mut numb1 = String::new();
+    io::stdin()
+        .read_line(&mut numb1)
+        .expect("Failed to read line");
+    let numb1: u32 = numb1.trim().parse().expect("Please type a number!");
+    println!("Enter Your Second Number:");
+    let mut numb2 = String::new();
+    io::stdin()
+        .read_line(&mut numb2)
+        .expect("Failed to read line");
+    let numb2: u32 = numb2.trim().parse().expect("Please type a number!");
+    let zero: u32 = 0;
+    let newCalc = Calculations{
+        number1: numb1,
+        number2: numb2,
+        answer: zero
+    };
+    return newCalc
+}
+
+fn make_choice(op: char, calc: &mut Calculations){
+    if op == 'M'{
+        println!("YES");
     }
+    match op{
+        'M' => calc.multiply(),
+        'D' => calc.divide(),
+        'A' => calc.addition(),
+        'S' => calc.subtract(),
+        _ => println!("DIDNT MATCH")
+    };
 }
